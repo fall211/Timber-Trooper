@@ -37,4 +37,15 @@ public class Gun : MonoBehaviour
         }
 
     }
+
+    public void BoostGun(){
+        int rand = Random.Range(0,2);
+        
+        if (rand == 0) fireRate -= 0.05f;
+        if (rand == 1) damage++;
+        fireRate = Mathf.Clamp(fireRate, 0.05f, 1f);
+        if (fireRate <= 0.055f && rand == 0){
+            damage++;
+        }
+    }
 }

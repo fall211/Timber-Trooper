@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (enemies.Count < maxEnemies){
-            SpawnEnemy();
+            SpawnEnemy(score);
         }
         maxEnemies = 10 + score / 3;
         maxEnemies = Mathf.Min(maxEnemies, 100);
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SpawnEnemy(){
+    private void SpawnEnemy(int score){
         // spawn enemies around the player
         Vector2 spawnLocation = Random.insideUnitCircle * 10f;
         spawnLocation += new Vector2(player.transform.position.x, player.transform.position.z);
@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 100f)){
             spawnLocation3D = hit.point;
             var enemy = Instantiate(EnemyPrefab, spawnLocation3D, Quaternion.identity);
+            enemy.GetComponent<EnemyAI>().SetHealth(score);
             enemies.Add(enemy);
         }
     }

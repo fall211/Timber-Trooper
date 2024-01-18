@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
 
     private void LateUpdate(){
-        health = Mathf.Clamp(health, 0, 100);
+        health = Mathf.Clamp(health, 0, int.MaxValue);
         healthText.text = $"Health: {health}";
     }
     private void Start(){

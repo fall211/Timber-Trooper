@@ -19,6 +19,8 @@ public class EnemyAI : MonoBehaviour
     private bool emissive = false;
     private float emissiveTimer = 0f;
 
+    [SerializeField] private GameObject[] powerUps;
+
     private void Start()
     {
         player = GameObject.Find("Player");
@@ -59,10 +61,13 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void RandomizeStats(){
-        var size = Random.Range(0.8f, 1.2f);
+        var size = Random.Range(0.8f, 1.5f);
         transform.localScale = Vector3.one * size;
-        damage = Mathf.RoundToInt(4 * size);
-
+    }
+    public void SetHealth(int scaler){
+        health = Mathf.RoundToInt(3 * Mathf.Pow(1.01f, scaler));
+        health = Mathf.Clamp(health, 1, 250);
+        damage = health;
     }
 
     public void StartWalking(){
@@ -76,11 +81,20 @@ public class EnemyAI : MonoBehaviour
         isWalking = false;
             audioSource.Play();
         animator.SetTrigger("Die");
-        if (givePoints) GameManager.Instance.AddScore(1);
+        if (givePoints) {
+            GameManager.Instance.AddScore(1);
+            spawnPowerUp();
+        }
         GameManager.Instance.enemies.Remove(gameObject);
         Destroy(gameObject, 6f);
     }
 
+    private void spawnPowerUp(){
+        var rand = Random.Range(0, 10);
+        if (rand <= 1) {
+            GameObject.Instantiate(powerUps[Random.Range(0, powerUps.Length)], transform.position, Quaternion.identity);
+        }
+    }
     public void TakeDamage(int dmg){
         if (isActive) EnableEmission();
         health -= dmg;
